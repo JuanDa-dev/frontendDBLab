@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url = 'https://backendDBLab.edimarod02.repl.co/'
+const url = 'https://backenddblab.onrender.com/'
 
 export const getRequest = async (name) => {
     return await axios.get(url + name, { withCredentials: true })

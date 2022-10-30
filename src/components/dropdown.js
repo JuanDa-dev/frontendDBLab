@@ -6,7 +6,7 @@ export default function Dropdwon ({ id, variables, change, dataDropdown }) {
 
     const changeOption = async (e) => {
         e.preventDefault();
-        change(dataDropdown, optionSelected).then(res => console.log(res))
+        await change(dataDropdown, optionSelected)
     }
 
     return(

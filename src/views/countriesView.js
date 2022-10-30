@@ -9,9 +9,7 @@ import Dropdown from '../components/dropdown'
 const graphicType = {
     BarChart: [],
     DoughnutChart: [],
-    LineChart: [],
-    PolarAreaChart: [],
-    RadarChart: []
+    LineChart: []
 }
 
 const graphicDataType = {
@@ -24,7 +22,7 @@ export default function CountriesView() {
     const [countries, setCountries] = useState([])
     const [dataGC, setDataGC] = useState(Object.assign({}, graphicType))
     const [labelsGC, setLabelsGC] = useState(Object.assign({}, graphicType))
-    const options = ["countries", "dataCountries"]
+    const options = ["Data from all countries", "Data from a country"]
     const [showCountries, setShowCountries] = useState(options[1])
     
     //Valores de los datos del pais seleccionado
@@ -56,7 +54,7 @@ export default function CountriesView() {
 
     //Actualizo los datos de las graficas
     const updateGraphicsGDC = (data, labels) => {
-        for (const key in graphicType) {
+        for (const key in graphicDataType) {
             dataGDC[key] = data[key]
             labelsGDC[key] = labels
         }
@@ -89,15 +87,16 @@ export default function CountriesView() {
     }
 
     //Variable a mostrar
-    const changeVariable = async ({ graphic, type }, variable) => {
+    const changeVariable = async ({ graphic, type, MIN_DATE, MAX_DATE }, variable) => {
         if (type === 0) {
             const { data, labels } = getCountries(countries, variable)
             updateGraphicsGC(getData({ data: dataGC, newData: data, graphic, elements: graphicType }), labels)
-            return { data, labels }
+            return { data, labels, type }
         } else {
-            const { data, labels } = getDataCountry(dataCountrySelected, countrySelected, variable)
+            const dataCountry = await getRequest(`dataCountryByDate/${countrySelected.isoCode}/${MIN_DATE}/${MAX_DATE}`); 
+            const { data, labels } = getDataCountry(dataCountry, countrySelected, variable)
             updateGraphicsGDC(getData({ data: dataGDC, newData: data, graphic, elements: graphicDataType }), labels)
-            return { data, labels }
+            return { data, labels, type }
         }
     }
 
@@ -132,7 +131,7 @@ export default function CountriesView() {
                 {showCountries === options[0] ? (
                     Object.keys(dataGC).map((graphic, index) => {
                         return (
-                            <Graphic id={graphic} key={index} datasets={dataGC[graphic]} 
+                            <Graphic id={`C${graphic}`} key={index} datasets={dataGC[graphic]} 
                               labels={labelsGC[graphic]} variables={countryVariables} 
                               type={graphic} change={changeVariable} dataDropdown={{ graphic, type: 0 }} />
                         )
@@ -142,13 +141,13 @@ export default function CountriesView() {
                         <Dropdown id={`changeCountry`} variables={countries.map(d => d.location ? d.location : "Unknown")} 
                           change={changeCountry} />
                         {Object.keys(dataGDC).map((graphic, index) => {
-                        return (
-                            <Graphic id={`data${graphic}`} key={index} datasets={dataGDC[graphic]} 
-                              labels={labelsGDC[graphic]} variables={dataVariables} 
-                              type={graphic} change={changeVariable} option={countrySelected} 
-                              dataDropdown={{ graphic, type: 1 }} />
-                        )
-                    })}
+                            return (
+                                <Graphic id={`dataC${graphic}`} key={index} datasets={dataGDC[graphic]} 
+                                labels={labelsGDC[graphic]} variables={dataVariables} 
+                                type={graphic} change={changeVariable} option={countrySelected} 
+                                dataDropdown={{ graphic, type: 1 }} />
+                            )
+                        })}
                     </>
                 )}
             </div>

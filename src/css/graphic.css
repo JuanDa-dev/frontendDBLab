@@ -26,3 +26,23 @@
     justify-content: space-around;
     align-items: center;
 }
+
+#dataBarChart canvas, #BarChart canvas {
+    height: 100%;
+}
+
+#BarChart {
+    height: 500px;
+}
+
+#dataBarChart {
+    height: 40000px;
+}
+
+#CBarChart {
+    height: 5000px;
+}
+
+#dataCBarChart {
+    height: 10000px;
+}

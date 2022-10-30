@@ -11,6 +11,3 @@
   --br-md: 20px;
 }
 
-#dataBarChart canvas {
-    height: auto;
-}
