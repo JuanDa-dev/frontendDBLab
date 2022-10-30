@@ -1,0 +1,38 @@
+form {
+    height: 50px;
+    width: 700px;
+    padding: 10px;
+}
+
+.dropdownbutton {
+    width: 100%;
+    height: 100%;
+}
+
+form .dropdownbutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.dropdownbutton label {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    flex-wrap: wrap;
+}
+
+.dropdownbutton label input[type="submit"], .dropdownbutton label select, .dropdownbutton label select option {
+    height: 35px;
+}
+
+.dropdownbutton label select {
+    width: 60%;
+    border-radius: 10px;
+}
+
+.dropdownbutton label select::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
+}

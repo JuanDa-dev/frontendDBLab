@@ -1,0 +1,16 @@
+:root {
+  /* fonts */
+  --font-roboto: Roboto;
+  --font-montserrat: Montserrat;
+
+  /* Colors */
+  --color-white: #fff;
+  --color-black: #000;
+
+  /* border radiuses */
+  --br-md: 20px;
+}
+
+#dataBarChart canvas {
+    height: auto;
+}
