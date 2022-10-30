@@ -18,8 +18,7 @@ const graphicType = {
 }
 
 const graphicDataType = {
-    LineChart: [],
-    BarChart: []
+    LineChart: []
 }
 
 export default function ContinentsView() {
@@ -27,7 +26,7 @@ export default function ContinentsView() {
     const [continents, setContinents] = useState([])
     const [dataGC, setDataGC] = useState(Object.assign({}, graphicType))
     const [labelsGC, setLabelsGC] = useState(Object.assign({}, graphicType))
-    const options = ["continents", "dataContinents"]
+    const options = ["Data from all contients", "Data from a continent"]
     const [showContinents, setShowContinents] = useState(options[1])
     
     //Valores de los datos del continente seleccionado
@@ -74,7 +73,7 @@ export default function ContinentsView() {
             const tempContinents = (await getRequest('continents')).map(dato => dato)
             const continent = tempContinents[0]
             const dataContinent = await getRequest(`dataContinent/${continent.name}`)
-            const tempDataContinents = await getDataContinent(dataContinent, continent, dataVariables[0])
+            const tempDataContinents = await getDataContinent(dataContinent, dataVariables[0])
             setContinents(tempContinents)
             setContinentSelected(continent)
             setDataContinentSelected(dataContinent)
@@ -92,17 +91,18 @@ export default function ContinentsView() {
     }
 
     //Variable a mostrar
-    const changeVariable = async ({ graphic, type }, variable) => {
+    const changeVariable = async ({ graphic, type, MIN_DATE, MAX_DATE }, variable) => {
         if (type === 0) {
             const { data, labels } = getContinents(continents, variable)
             updateGraphicsGC(getData({ data: dataGC[graphic], newData: data, graphic, elements: graphicType }), 
                              labels)
-            return { data, labels }
+            return { data, labels, type }
         } else {
-            const { data, labels } = await getDataContinent(dataContinentSelected, continentSelected, variable)
+            const dataContinent = await getRequest(`dataContinentByDate/${continentSelected.name}/${MIN_DATE}/${MAX_DATE}`);
+            const { data, labels } = await getDataContinent(dataContinent, variable)
             updateGraphicsGDC(getData({ data: dataGDC[graphic], newData: data, graphic, elements: graphicDataType }), 
                               labels)
-            return { data, labels }
+            return { data, labels, type }
         }
     }
 
@@ -115,7 +115,7 @@ export default function ContinentsView() {
             return continent.name === variable
         })
         const dataContinent = await getRequest(`dataContinent/${newContinent.name}`)
-        const { data, labels } = await getDataContinent(dataContinent, newContinent, variable)
+        const { data, labels } = await getDataContinent(dataContinent, variable)
         setContinentSelected(newContinent)
         setDataContinentSelected(dataContinent)
         updateGraphicsGDC(getData({ data, elements: graphicDataType }), labels)

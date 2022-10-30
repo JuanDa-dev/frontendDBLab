@@ -21,6 +21,7 @@ export default function BarChart({ datasets, labels, variables, id, change, data
     const options = {
         fill: true,
         indexAxis: 'y',
+        maintainAspectRatio: false,
         responsive: true,
         scales: {
             y: {
@@ -38,23 +39,14 @@ export default function BarChart({ datasets, labels, variables, id, change, data
     const [MAX_DATE, setMAX_DATE] = useState(labels[labels.length - 1])
 
     const update = (data, optionSelected) => {
-        if (dataDropdown.type === 0) {
-            change(data, optionSelected).then(res => setData(dataGraphic(res.data, res.labels, structure)))
-        } else {
-            const tempLabels = []
-            change(data, optionSelected).then(res => {
-                setData(dataGraphic(res.data.map(dato => dato['data'].filter(d => {
-                    const indice = dato['data'].indexOf(d)
-                    const condicion = labels[indice] >= getDate(MIN_DATE) && labels[indice] <= getDate(MAX_DATE)
-                    if (condicion) {
-                        tempLabels.push(labels[indice])
-                    }
-                    return condicion
-                })), tempLabels, structure))
-                setMIN_DATE(res.labels[0])
-                setMAX_DATE(res.labels[labels.length - 1])
+        change({ graphic: data.graphic, type: data.type, MIN_DATE, MAX_DATE }, 
+            optionSelected).then(res => {
+                setData(dataGraphic(res.data, res.labels, structure))
+                if(data.type === 1) {
+                    setMIN_DATE(res.labels[0])
+                    setMAX_DATE(res.labels[res.labels.length - 1])
+                }
             })
-        }
     }
 
 
@@ -63,14 +55,14 @@ export default function BarChart({ datasets, labels, variables, id, change, data
         if(element) {
             element.addEventListener('click', () => {
                 const select = document.querySelector('#carschangeContinent')
-                update({}, select.value)
+                update(dataDropdown, select.value)
             })
         }
         const element2 = document.getElementById('changeCountry')
         if(element2) {
             element2.addEventListener('click', () => {
                 const select = document.querySelector('#carschangeCountry')
-                update({}, select.value)
+                update(dataDropdown, select.value)
             })
         }
     }, [])

@@ -17,7 +17,7 @@ export const getDataCountry = (dataCountry, country, variable) => {
     const data = [{
         label: `${variable.replaceAll("_", " ")} of ${country.location}`,
         data: dataCountry.map(dato => {
-            labels.push(getDate(dato['dateR']))
+            labels.push(getDate(new Date(dato['dateR'])))
             return dato[variable] ? dato[variable] : 0
         }),
         colors: [getRandomColor()]
@@ -37,8 +37,8 @@ export const getContinents = (continents, variable) => {
     return { data, labels }
 }
 
-export const getDataContinent = async (dataContinent, continent, variable) => {
-    const labels = (await getRequest('dates')).map(dato => getDate(dato['dateR']))
+export const getDataContinent = async (dataContinent, variable) => {
+    const labels = (await getRequest('dates')).map(dato => getDate(new Date(dato['dateR'])))
     const temp = {}
     dataContinent.map(dato => {
         if (temp[dato.isoCode]) {
