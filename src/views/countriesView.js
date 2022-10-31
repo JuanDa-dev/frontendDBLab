@@ -104,17 +104,18 @@ export default function CountriesView() {
     const changeCountry = async (dataD, variable) => {
         const newCountry = countries.find(country => {
             if(variable === "Unknown") {
-                return country.name === null || country.name === undefined
+                return country.location === null || country.location === undefined
             }
-            return country.name === variable
+            return country.location === variable
         })
+
         const dataCountry = await getRequest(`dataCountry/${newCountry.isoCode}`)
-        const { data, labels } = getDataCountry(dataCountry, newCountry, variable)
+        const { data, labels } = getDataCountry(dataCountry, newCountry, dataVariables[0])
         setCountrySelected(newCountry)
         setDataCountrySelected(dataCountry)
-        updateGraphicsGDC(getData({ data }), labels)
+        updateGraphicsGDC(getData({ data, elements: graphicDataType }), labels)
 
-        return "country change"
+        return "change"
     }
 
     useEffect(() => {
