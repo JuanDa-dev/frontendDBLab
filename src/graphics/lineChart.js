@@ -49,21 +49,8 @@ export default function LineChart({ datasets, labels, variables, id, change, dat
     }
 
     useEffect(() => {
-        const element = document.getElementById('changeContinent')
-        if(element) {
-            element.addEventListener('click', () => {
-                const select = document.querySelector('#carschangeContinent')
-                update(dataDropdown, select.value)
-            })
-        }
-        const element2 = document.getElementById('changeCountry')
-        if(element2) {
-            element2.addEventListener('click', () => {
-                const select = document.querySelector('#carschangeCountry')
-                update(dataDropdown, select.value)
-            })
-        }
-    }, [])
+        setData(dataGraphic(datasets, labels, structure))
+    }, [datasets, labels])
 
     return (
         <>

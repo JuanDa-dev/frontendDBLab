@@ -115,7 +115,7 @@ export default function ContinentsView() {
             return continent.name === variable
         })
         const dataContinent = await getRequest(`dataContinent/${newContinent.name}`)
-        const { data, labels } = await getDataContinent(dataContinent, variable)
+        const { data, labels } = await getDataContinent(dataContinent, dataVariables[0])
         setContinentSelected(newContinent)
         setDataContinentSelected(dataContinent)
         updateGraphicsGDC(getData({ data, elements: graphicDataType }), labels)
